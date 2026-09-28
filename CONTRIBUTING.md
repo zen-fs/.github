@@ -18,19 +18,20 @@ When submitting a bug report, you must submit a [Minimal reproducible example](h
 
 ### LLM Policy
 
-LLM-generated issues and PRs are permitted under the following rules:
+LLM-generated contributions are permitted under the following rules:
 
-- You must disclose _which model_ you used. In an issue, you might include a short sentence like "Generated with `claude-opus-5`".
-  For PRs, a `Co-Authored-By` with the model information is sufficient (and will be added to the squash commit if you don't include it). Always include the model ID, like `claude-opus-5` or `gpt-5.6-sol`.
-- You, the human, are responsible for what the LLM outputs.
-- Respect maintainers' time. Often time LLM-generated issues and PRs include exceedingly long descriptions and such that do not add value. While including details and context is important, a 2000 word PR description is probably not needed.
-    - LLMs may include information like "all tests passing", "format clean", etc. This is completely useless since PRs run through CI/CD workflows that check that stuff. Do not include this kind of information in your PR.
-    - In issues, LLMs may over-explain things like the minimal reproduction. Please don't include this since it doesn't help maintainers.
-- Don't "slopify" comments in code. There are two kinds of slop in comments that LLMs will often output:
-    1. Inline comments explaining what the code is doing. This is a poor programming practice. Your code should be self-explanatory. For example: `duck.quack(5) // quack 5 times`, the comment is completely redundant.
-    2. Documentation comments. While it is important to document functions and classes, you should usually only have one or two sentences. LLMs will often include hundreds of words, which is not useful. Additionally, the LLM may document "internal changes", which is not the point of these doc comments. They are meant to describe the "contract" of functions and classes, and occasionally non-obvious behavior.
-- In PRs, avoid massive rewrites and rebases when making additional changes. For example, if a maintainer asks for a small change there is no reason to rebase the whole PR.
-- In general, use common sense.
+1. You must disclose _which model_ you used.
+    - Contributions that do not disclose AI usage will be closed without review
+    - In an issue, you might include a short sentence like "Generated with `claude-opus-5`".
+    - For PRs, a `Co-Authored-By` with the model information is sufficient (and will be added to the squash commit if you don't include it). Always include the model ID, like `claude-opus-5` or `gpt-5.6-sol`.
+2. You, the human, are responsible for what the LLM outputs.
+3. Often times, LLM-generated contributions include exceedingly long descriptions and such that do not add value. While including details and context is important, a 2000 word issue or PR description is probably not needed.
+    1. LLMs may include information like "all tests passing", "format clean", etc. This is completely useless since PRs run through CI/CD workflows that check that stuff. Do not include this kind of information in your PR.
+    2. In issues, LLMs may over-explain things like the minimal reproduction. Please don't include this since it doesn't help maintainers.
+4. Agent-driven contributions, especially bulk ones are not allowed. Maintainers can already use LLMs, acting as a proxy is worse than us using the tools ourselves.
+5. In PRs, avoid massive rewrites and rebases when making additional changes. For example, if a maintainer asks for a small change there is no reason to rebase the whole PR.
+
+In general: use common sense and respect maintainers' time.
 
 ## Code Style
 
@@ -56,10 +57,13 @@ The [Naming Things in Code](https://youtu.be/-J3wNP6u5YU) video covers everythin
 - Units will go into documentation if they are needed
 - Bend the utils recommendation since some code can't be attributed to some other piece of code, it really is just a utility.
 
-#### Documentation
+#### Comments
 
-For the different functions and variables, write a short description of what it does and how it should be used.
-I certainly haven't been the best about doing this, so if you find missing or outdated documentation an issue or PR would be welcome.
+- A self-explanatory type or symbol name needs no doc comment.
+- Inline comments should _never_ describe what the code is doing; that should be self-explanatory.
+- When a comment is required, write one short sentence describing behavior.
+- **Never** include history, rationale, or examples.
+- Don't add interface-level JSDoc that just restates the interface name.
 
 ## NPM vs 3rd party package managers
 
@@ -111,11 +115,11 @@ You can run tests with the `npm test` command.
 Tests are located in the `tests` directory. They are written in Typescript to catch type errors, and test step-by-step using Node's native testing.
 Suite names are generally focused around a set of features (directories, links, permissions, etc.) rather than specific functions or classes.
 
-Tests are run using the `zenfs-test` command, which comes from `scripts/test.js`.
+Tests are run using the `zenfs-test` command, which comes from @zenfs/core's `scripts/test.js`.
 This makes it as easy as possible to change the configuration used for tests.
 Run `npx zenfs-test --help` to see all the options.
 
-`common.ts` provides the framework used for testing.
+@zenfs/core's `common.ts` provides the framework used for testing.
 It copies files from `tests/data` to the virtual file system.
 These files probably aren't needed on their own, and could be generated at test runtime, though they work fine at the time of writing.
 I think the time spent making those changes could be better spent on actual features.
